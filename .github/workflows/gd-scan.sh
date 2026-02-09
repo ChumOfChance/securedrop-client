@@ -7,4 +7,4 @@ while read -r line; do
         tar -xzf $archive
         guarddog --log-level debug npm scan package/ --output-format sarif >> guarddog-$scan.sarif
         ((scan++))
-done < packages.txt
+done < package-list.txt
