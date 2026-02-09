@@ -1,0 +1,50 @@
+name: GuardDog for App
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  guarddog:
+    permissions:
+      contents: read # for actions/checkout to fetch code
+      security-events: write # for github/codeql-action/upload-sarif to upload SARIF results
+    name: Scan dependencies
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install GuardDog
+        run: pip install guarddog
+
+      - name: Get diff of changed packages
+        run: 'git diff HEAD^ HEAD pnpm-lock.yaml | grep -Po "[a-zA-Z-/@.0-9]+@[.0-9\n\r]+" > /tmp/package-list.txt'
+        working-directory: app
+
+      - name: Install sarif-tools
+        run: pip install sarif-tools
+
+      - name: Scan 
+        run: bash ./.github/workflows/gd-scan.sh
+
+      - name: Combine .sarif files
+      - run: sarif copy --output guarddog.sarif /tmp/gd-scans
+
+      - name: Upload SARIF file to GitHub
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          category: guarddog-builtin
+          sarif_file: guarddog.sarif
