@@ -33,7 +33,7 @@ jobs:
         run: pip install guarddog
 
       - name: Get diff of changed packages
-        run: git diff HEAD^ HEAD pnpm-lock.yaml | grep -Po '[a-zA-Z-/@.0-9]+@[.0-9\n\r]+' > /package-list.txt
+        run: git diff HEAD^ HEAD pnpm-lock.yaml | grep -Po '[a-zA-Z-/@.0-9]+@[.0-9\n\r]+' > ~/package-list.txt
         working-directory: ./app
 
       - name: Install sarif-tools
@@ -43,7 +43,7 @@ jobs:
         run: bash ./.github/workflows/gd-scan.sh
 
       - name: Combine .sarif files
-        run: sarif copy --output guarddog.sarif /gd-scans
+        run: sarif copy --output guarddog.sarif ~/gd-scans
 
       - name: Upload SARIF file to GitHub
         uses: github/codeql-action/upload-sarif@v4
