@@ -33,7 +33,7 @@ jobs:
         run: pip install guarddog
 
       - name: Get diff of changed packages
-        run: git diff HEAD^ HEAD pnpm-lock.yaml > package-list.txt
+        run: git diff HEAD^ HEAD pnpm-lock.yaml | grep -Po '[a-zA-Z-\/@.0-9]+@[.0-9\n\r]+' > package-list.txt # this fails with exit code 1 if there is no grep match
         working-directory: ./app
 
       - name: Install sarif-tools
