@@ -32,6 +32,8 @@ jobs:
       - name: Install GuardDog
         run: pip install guarddog
 
+      - run: pip install poetry
+
       # - name: Get diff of changed packages
       #   run: git diff HEAD^ HEAD pyproject.toml | grep -Po '[a-zA-Z-\/@.0-9]+@[.0-9\n\r]+' > package-list.txt # this fails with exit code 1 if there is no grep match
       #   working-directory: ./client
