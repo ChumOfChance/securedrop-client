@@ -1,6 +1,5 @@
 # Changelog
 
-I am making an edit here
 
 ## 0.17.2
 
